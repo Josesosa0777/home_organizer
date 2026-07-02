@@ -1,0 +1,8 @@
+[tool.pytest]
+asyncio_mode = "auto"
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "W", "C90", "Q"]
+ignore = []
+exclude = ["build", "dist", "*.pyc", "__pycache__"]
