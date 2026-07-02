@@ -16,11 +16,11 @@ __pycache__/
 *.py[cod]
 
 # Build outputs
-/dist/
-/build/
-/.next/
-/.vite/
-coverage/
+**/dist/
+**/build/
+**/.next/
+**/.vite/
+**/coverage/
 
 # Environment files
 .env
@@ -39,7 +39,12 @@ pnpm-debug.log*
 .vscode/
 .idea/
 
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
 # Test artifacts
-.pytest_cache/
-.mypy_cache/
-.ruff_cache/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/

@@ -7,6 +7,7 @@ from sqlite3 import Connection
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Query, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from .database import get_connection, get_database_url, init_db, serialize_item
@@ -19,6 +20,14 @@ app = FastAPI(
     title="My Home Organizer",
     description="API para gestión de items del hogar con categorías, filtros y estadísticas.",
     version="1.0.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 

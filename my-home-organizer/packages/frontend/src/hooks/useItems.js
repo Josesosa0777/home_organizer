@@ -4,28 +4,41 @@ import * as itemsApi from "../api/items.js";
 export const useItems = (apiUrl, filters) => {
   const queryClient = useQueryClient();
 
-  const itemsQuery = useQuery(["items", filters], () => itemsApi.getItems(apiUrl, filters), {
+  const itemsQuery = useQuery({
+    queryKey: ["items", filters],
+    queryFn: () => itemsApi.getItems(apiUrl, filters),
     enabled: Boolean(apiUrl),
   });
 
-  const statsQuery = useQuery(["stats"], () => itemsApi.getStats(apiUrl), {
+  const statsQuery = useQuery({
+    queryKey: ["stats"],
+    queryFn: () => itemsApi.getStats(apiUrl),
     enabled: Boolean(apiUrl),
   });
 
-  const createMutation = useMutation((payload) => itemsApi.createItem(apiUrl, payload), {
-    onSuccess: () => queryClient.invalidateQueries(["items"]),
+  const invalidateAll = () => {
+    queryClient.invalidateQueries({ queryKey: ["items"] });
+    queryClient.invalidateQueries({ queryKey: ["stats"] });
+  };
+
+  const createMutation = useMutation({
+    mutationFn: (payload) => itemsApi.createItem(apiUrl, payload),
+    onSuccess: invalidateAll,
   });
 
-  const updateMutation = useMutation(({ id, payload }) => itemsApi.updateItem(apiUrl, id, payload), {
-    onSuccess: () => queryClient.invalidateQueries(["items"]),
+  const updateMutation = useMutation({
+    mutationFn: ({ id, payload }) => itemsApi.updateItem(apiUrl, id, payload),
+    onSuccess: invalidateAll,
   });
 
-  const deleteMutation = useMutation((id) => itemsApi.deleteItem(apiUrl, id), {
-    onSuccess: () => queryClient.invalidateQueries(["items"]),
+  const deleteMutation = useMutation({
+    mutationFn: (id) => itemsApi.deleteItem(apiUrl, id),
+    onSuccess: invalidateAll,
   });
 
-  const archiveMutation = useMutation((id) => itemsApi.toggleArchive(apiUrl, id), {
-    onSuccess: () => queryClient.invalidateQueries(["items"]),
+  const archiveMutation = useMutation({
+    mutationFn: (id) => itemsApi.toggleArchive(apiUrl, id),
+    onSuccess: invalidateAll,
   });
 
   return {

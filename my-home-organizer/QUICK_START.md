@@ -1,19 +1,61 @@
 # 🚀 Quick Start - My Home Organizer
 
-## Opción 1: Ejecutar ambos servidores (recomendado)
+## Backend (FastAPI + Python)
 
-### Terminal 1 - Backend
+### 1. Crear y activar ambiente virtual
+
 ```bash
 cd packages/backend
-/usr/local/bin/python3 -m uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
+
+# Crear ambiente virtual
+python -m venv .venv
+
+# Activar (Windows)
+.venv\Scripts\activate
+
+# Activar (Mac/Linux)
+source .venv/bin/activate
 ```
 
-✅ Backend disponible en: **http://localhost:8000**
-📚 API Docs (Swagger): **http://localhost:8000/docs**
+> Sabrás que está activo porque el prompt mostrará `(.venv)` al inicio.
 
-### Terminal 2 - Frontend
+### 2. Instalar dependencias
+
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Ejecutar servidor
+
+```bash
+python -m uvicorn src.main:app --reload --port 8001
+```
+
+✅ Backend disponible en: **http://localhost:8001**
+📚 Swagger / API Docs: **http://localhost:8001/docs**
+
+---
+
+## Frontend (React + Vite)
+
+### 1. Instalar dependencias
+
 ```bash
 cd packages/frontend
+npm install
+```
+
+### 2. Configurar variable de entorno
+
+Crea el archivo `packages/frontend/.env` (si no existe):
+
+```
+VITE_API_URL=http://localhost:8001
+```
+
+### 3. Ejecutar servidor de desarrollo
+
+```bash
 npm run dev
 ```
 
@@ -21,83 +63,41 @@ npm run dev
 
 ---
 
-## Opción 2: Ejecutar solo Backend (para tests API)
+## Resumen — dos terminales en paralelo
 
-```bash
-cd packages/backend
-/usr/local/bin/python3 -m uvicorn src.main:app --reload
-```
-
-Usar herramientas como Postman, Insomnia o cURL para probar endpoints.
+| Terminal | Comando |
+|----------|---------|
+| **Backend** | `cd packages/backend` → activar `.venv` → `python -m uvicorn src.main:app --reload --port 8001` |
+| **Frontend** | `cd packages/frontend` → `npm run dev` |
 
 ---
 
 ## 🧪 Ejecutar Tests
 
 ### Backend
+
 ```bash
 cd packages/backend
-/usr/local/bin/python3 -m pytest -v
+# (con .venv activo)
+python -m pytest -v
 ```
-**Resultado esperado**: 12 tests passed ✅
 
 ### Frontend
+
 ```bash
 cd packages/frontend
-npm test -- --run
-```
-**Resultado esperado**: 4 tests passed ✅
-
----
-
-## ✓ Validar Calidad del Código
-
-### Backend - Ruff
-```bash
-cd packages/backend
-/usr/local/bin/python3 -m ruff check src/ tests/
-```
-
-### Frontend - ESLint
-```bash
-cd packages/frontend
-npm run lint
-```
-
-### Frontend - Build
-```bash
-cd packages/frontend
-npm run build
+npm test
 ```
 
 ---
 
-## 📋 Endpoints Principales
+## 📋 Endpoints principales
 
 | Método | Endpoint | Descripción |
 |--------|----------|-------------|
+| `GET` | `/api/items` | Listar items (filtros: category, archived, search) |
 | `POST` | `/api/items` | Crear item |
-| `GET` | `/api/items` | Listar items (con filtros) |
-| `GET` | `/api/items/{id}` | Obtener item |
 | `PATCH` | `/api/items/{id}` | Actualizar item |
 | `DELETE` | `/api/items/{id}` | Eliminar item |
-| `PATCH` | `/api/items/{id}/archive` | Alternar archivo |
-| `GET` | `/api/stats` | Obtener estadísticas |
-
----
-
-## 🎯 Próximos Pasos
-
-1. Abre **http://localhost:5173** en tu navegador
-2. Crea items con diferentes categorías
-3. Usa filtros para buscar por categoría, estado de archivo o nombre
-4. Consulta `/api/docs` para explorar la API completa
-
----
-
-## 💡 Notas
-
-- Base de datos SQLite: `packages/backend/src/home_organizer.db`
-- Todos los tests pasan sin errores
-- ESLint y Ruff están configurados sin warnings fatales
-- La aplicación está lista para desarrollo y producción
+| `PATCH` | `/api/items/{id}/archive` | Archivar / restaurar |
+| `GET` | `/api/stats` | Estadísticas por categoría |

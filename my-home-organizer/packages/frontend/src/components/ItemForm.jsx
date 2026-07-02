@@ -12,7 +12,7 @@ import {
 
 const VALID_CATEGORIES = ["box", "item", "clothing", "document"];
 
-function ItemForm({ editingItem, onSave, onCancel }) {
+function ItemForm({ editingItem, onSave, onCancel, bare = false }) {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("item");
   const [location, setLocation] = useState("");
@@ -56,70 +56,86 @@ function ItemForm({ editingItem, onSave, onCancel }) {
       notes: notes || undefined,
       metadata: parsedMetadata,
     });
+
+    if (!editingItem) {
+      setName("");
+      setCategory("item");
+      setLocation("");
+      setTags("");
+      setNotes("");
+      setMetadata("{}");
+    }
   };
+
+  const formContent = (
+    <Box component="form" onSubmit={handleSubmit}>
+      <Stack spacing={2}>
+        <TextField
+          label="Nombre"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          required
+        />
+        <TextField
+          select
+          label="Categoría"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          {VALID_CATEGORIES.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          label="Ubicación"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
+        />
+        <TextField
+          label="Tags"
+          helperText="Separar con comas"
+          value={tags}
+          onChange={(event) => setTags(event.target.value)}
+        />
+        <TextField
+          label="Notas"
+          value={notes}
+          onChange={(event) => setNotes(event.target.value)}
+          multiline
+          rows={2}
+        />
+        <TextField
+          label="Metadata JSON"
+          value={metadata}
+          onChange={(event) => setMetadata(event.target.value)}
+          multiline
+          minRows={3}
+          helperText={'Ejemplo: { "room": "sala" }'}
+        />
+        <Stack direction="row" spacing={2}>
+          <Button type="submit" variant="contained">
+            Guardar
+          </Button>
+          {(editingItem || bare) && (
+            <Button variant="outlined" onClick={onCancel}>
+              Cancelar
+            </Button>
+          )}
+        </Stack>
+      </Stack>
+    </Box>
+  );
+
+  if (bare) return formContent;
 
   return (
     <Paper sx={{ p: 3 }}>
       <Typography variant="h6" sx={{ mb: 2 }}>
         {editingItem ? "Editar item" : "Crear nuevo item"}
       </Typography>
-      <Box component="form" onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          <TextField
-            label="Nombre"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            required
-          />
-          <TextField
-            select
-            label="Categoría"
-            value={category}
-            onChange={(event) => setCategory(event.target.value)}
-          >
-            {VALID_CATEGORIES.map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </TextField>
-          <TextField
-            label="Ubicación"
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-          />
-          <TextField
-            label="Tags"
-            helperText="Separar con comas"
-            value={tags}
-            onChange={(event) => setTags(event.target.value)}
-          />
-          <TextField
-            label="Notas"
-            value={notes}
-            onChange={(event) => setNotes(event.target.value)}
-            multiline
-          />
-          <TextField
-            label="Metadata JSON"
-            value={metadata}
-            onChange={(event) => setMetadata(event.target.value)}
-            multiline
-            minRows={4}
-            helperText={'Ejemplo: { "room": "sala" }'}
-          />
-          <Stack direction="row" spacing={2}>
-            <Button type="submit" variant="contained">
-              Guardar
-            </Button>
-            {editingItem && (
-              <Button variant="outlined" onClick={onCancel}>
-                Cancelar
-              </Button>
-            )}
-          </Stack>
-        </Stack>
-      </Box>
+      {formContent}
     </Paper>
   );
 }
@@ -128,6 +144,7 @@ ItemForm.propTypes = {
   editingItem: PropTypes.object,
   onSave: PropTypes.func.isRequired,
   onCancel: PropTypes.func.isRequired,
+  bare: PropTypes.bool,
 };
 
 export default ItemForm;

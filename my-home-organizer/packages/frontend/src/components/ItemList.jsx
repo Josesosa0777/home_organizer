@@ -5,14 +5,18 @@ import ItemCard from "./ItemCard.jsx";
 function ItemList({ items, loading, onEdit, onDelete, onToggleArchive }) {
   if (loading) {
     return (
-      <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
+      <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
         <CircularProgress />
       </Box>
     );
   }
 
   if (!items.length) {
-    return <Typography>No hay items para mostrar.</Typography>;
+    return (
+      <Typography color="text.secondary" sx={{ py: 4, textAlign: "center" }}>
+        No hay items para mostrar.
+      </Typography>
+    );
   }
 
   return (
@@ -33,7 +37,7 @@ function ItemList({ items, loading, onEdit, onDelete, onToggleArchive }) {
 ItemList.propTypes = {
   items: PropTypes.arrayOf(PropTypes.object).isRequired,
   loading: PropTypes.bool.isRequired,
-  onEdit: PropTypes.func.isRequired,
+  onEdit: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
   onToggleArchive: PropTypes.func.isRequired,
 };

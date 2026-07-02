@@ -7,8 +7,8 @@ function FilterBar({ category, archived, search, onCategoryChange, onArchivedCha
   return (
     <Stack direction={{ xs: "column", sm: "row" }} spacing={2} alignItems="center">
       <FormControl sx={{ minWidth: 160 }}>
-        <InputLabel>Categoría</InputLabel>
-        <Select value={category} label="Categoría" onChange={(event) => onCategoryChange(event.target.value)}>
+        <InputLabel shrink>Categoría</InputLabel>
+        <Select displayEmpty value={category} label="Categoría" onChange={(event) => onCategoryChange(event.target.value)} notched>
           {FILTER_CATEGORIES.map((option) => (
             <MenuItem key={option} value={option}>
               {option || "Todas"}
