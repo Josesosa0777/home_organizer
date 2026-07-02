@@ -50,8 +50,10 @@ npm install
 Crea el archivo `packages/frontend/.env` (si no existe):
 
 ```
-VITE_API_URL=http://localhost:8001
+VITE_API_URL=
 ```
+
+> El proxy de Vite redirige automáticamente `/api/*` → `http://localhost:8001`. No se necesita URL absoluta.
 
 ### 3. Ejecutar servidor de desarrollo
 
